@@ -1,0 +1,5 @@
+<resources>
+    <string name="slash">/</string>
+
+    <string name="require_permission_to_pick">You need permission to do this</string>
+</resources>
