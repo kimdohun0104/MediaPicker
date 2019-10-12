@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import com.dsm.mediapicker.callback.OnComplete
 import com.dsm.mediapicker.config.DefaultConfig
 import com.dsm.mediapicker.config.ImageConfig
-import com.dsm.mediapicker.enum.PickerOrientation
 import com.dsm.mediapicker.ui.ImagePickActivity
 
 abstract class MediaPicker {
@@ -84,7 +83,7 @@ abstract class MediaPicker {
         return this
     }
 
-    fun orientation(orientation: PickerOrientation): MediaPicker {
+    fun orientation(orientation: Int): MediaPicker {
         imageConfig.orientation = orientation
         return this
     }

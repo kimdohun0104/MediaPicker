@@ -15,6 +15,6 @@ object DefaultConfig {
     const val PORTRAIT_SPAN = 3
     const val LANDSCAPE_SPAN = 5
 
-    val ORIENTATION = PickerOrientation.BOTH
+    const val ORIENTATION = PickerOrientation.BOTH
     val THEME = R.style.PickerTheme
 }

@@ -3,7 +3,6 @@ package com.dsm.mediapicker.config
 import android.os.Parcel
 import android.os.Parcelable
 import com.dsm.mediapicker.callback.OnComplete
-import com.dsm.mediapicker.enum.PickerOrientation
 
 class ImageConfig() : Parcelable {
 
@@ -51,6 +50,6 @@ class ImageConfig() : Parcelable {
     var portraitSpan: Int = DefaultConfig.PORTRAIT_SPAN
     var landscapeSpan: Int = DefaultConfig.LANDSCAPE_SPAN
 
-    var orientation: PickerOrientation = DefaultConfig.ORIENTATION
+    var orientation: Int = DefaultConfig.ORIENTATION
     var theme: Int = DefaultConfig.THEME
 }
