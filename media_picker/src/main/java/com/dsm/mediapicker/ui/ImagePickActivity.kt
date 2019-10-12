@@ -1,7 +1,9 @@
 package com.dsm.mediapicker.ui
 
+import android.Manifest
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.database.Cursor
@@ -9,7 +11,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,9 +41,14 @@ class ImagePickActivity : AppCompatActivity() {
         return theme
     }
 
+    companion object {
+        private const val READ_EXTERNAL_STORAGE_CODE = 5254
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_pick)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), READ_EXTERNAL_STORAGE_CODE)
 
         if (config.orientation == PickerOrientation.PORTRAIT)
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -48,6 +57,16 @@ class ImagePickActivity : AppCompatActivity() {
 
         viewInit()
         recyclerViewInit()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            READ_EXTERNAL_STORAGE_CODE ->
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED)
+                    Toast.makeText(this, R.string.require_permission_to_pick, Toast.LENGTH_SHORT).show()
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+
     }
 
     private fun viewInit() {
@@ -88,7 +107,9 @@ class ImagePickActivity : AppCompatActivity() {
 
         rv_image.adapter = adapter
         rv_image.layoutManager = layoutManager
-        adapter.addItems(getAllShownImagesPath(this))
+
+        if (isReadExternalStorageAllow())
+            adapter.addItems(getAllShownImagesPath(this))
     }
 
     private fun getAllShownImagesPath(activity: Activity): List<Uri> {
@@ -110,4 +131,7 @@ class ImagePickActivity : AppCompatActivity() {
         }
         return listOfAllImages
     }
+
+    private fun isReadExternalStorageAllow(): Boolean =
+        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_DENIED
 }
