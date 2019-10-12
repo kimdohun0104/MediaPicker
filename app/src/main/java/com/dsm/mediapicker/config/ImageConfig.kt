@@ -15,6 +15,7 @@ class ImageConfig() : Parcelable {
         toolbarTextColor = parcel.readInt()
         portraitSpan = parcel.readInt()
         landscapeSpan = parcel.readInt()
+        orientation = parcel.readInt()
         theme = parcel.readInt()
     }
 
@@ -33,6 +34,7 @@ class ImageConfig() : Parcelable {
         parcel.writeInt(toolbarTextColor)
         parcel.writeInt(portraitSpan)
         parcel.writeInt(landscapeSpan)
+        parcel.writeInt(orientation)
         parcel.writeInt(theme)
     }
 
