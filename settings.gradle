@@ -1,2 +1,2 @@
-include ':app'
+include ':media_picker', ':media_picker_example'
 rootProject.name='MediaPicker'
