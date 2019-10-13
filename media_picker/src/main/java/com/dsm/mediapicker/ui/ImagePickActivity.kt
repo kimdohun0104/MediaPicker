@@ -61,9 +61,12 @@ class ImagePickActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
-            READ_EXTERNAL_STORAGE_CODE ->
+            READ_EXTERNAL_STORAGE_CODE -> {
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED)
                     Toast.makeText(this, R.string.require_permission_to_pick, Toast.LENGTH_SHORT).show()
+                else
+                    adapter.addItems(getAllShownImagesPath(this))
+            }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
 
