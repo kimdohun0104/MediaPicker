@@ -76,6 +76,7 @@ class ImagePickActivity : AppCompatActivity() {
         tv_current.text = "0"
         tv_max.text = config.maxImageCount.toString()
 
+        tv_title.setTextColor(getColorFromId(config.toolbarTextColor))
         tb_image.setBackgroundResource(config.toolbarBackgroundColor)
         tb_image.setTitleTextColor(config.toolbarTextColor)
         tv_complete.setTextColor(getColorFromId(config.toolbarTextColor))
@@ -109,7 +110,7 @@ class ImagePickActivity : AppCompatActivity() {
         rv_image.layoutManager = layoutManager
 
         if (isReadExternalStorageAllow())
-            adapter.addItems(getAllShownImagesPath(this))
+            adapter.addItems(getAllShownImagesPath(this).reversed())
     }
 
     private fun getAllShownImagesPath(activity: Activity): List<Uri> {

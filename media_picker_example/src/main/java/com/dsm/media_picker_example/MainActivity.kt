@@ -15,12 +15,14 @@ class MainActivity : AppCompatActivity() {
 
         btn_start.setOnClickListener {
             MediaPicker.createImage(this)
-                .orientation(PickerOrientation.PORTRAIT)
-                .landscapeSpan(4)
-                .portraitSpan(2)
-                .toolbarTitle("Hello")
+                .theme(R.style.AppTheme)
+                .toolbarBackgroundColor(R.color.colorPrimary)
+                .toolbarTextColor(R.color.colorPrimaryDark)
+                .toolbarTitle("이미지 선택")
+                .toolbarCompleteText("완료")
+                .maxImageCount(5)
                 .start {
-                    Log.d("DEBUGLOG", it.toString()) // get selected images real path
+
                 }
         }
     }
