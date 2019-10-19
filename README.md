@@ -29,7 +29,7 @@ allprojects {
 
 ```css
 dependencies {
-    implementation 'com.github.kimdohun0104:MediaPicker:1.0.1'
+    implementation 'com.github.kimdohun0104:MediaPicker:1.0.2'
 }
 ```
 
