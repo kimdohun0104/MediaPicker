@@ -6,7 +6,6 @@ import android.content.Intent
 import androidx.annotation.ColorRes
 import androidx.annotation.StyleRes
 import androidx.fragment.app.Fragment
-import com.dsm.mediapicker.callback.OnComplete
 import com.dsm.mediapicker.config.DefaultConfig
 import com.dsm.mediapicker.config.ImageConfig
 import com.dsm.mediapicker.enum.PickerOrientation
@@ -16,31 +15,32 @@ abstract class MediaPicker {
 
     private val imageConfig: ImageConfig by lazy { ImageConfig() }
 
-    abstract fun start(onComplete: (List<String>) -> Unit)
+    abstract fun start(requestCode: Int)
 
     companion object {
         class ImagePickerWithActivity(private val activity: Activity) : MediaPicker() {
-            override fun start(onComplete: (List<String>) -> Unit) =
-                activity.startActivity(getImageIntent(activity, onComplete))
+            override fun start(requestCode: Int) =
+                activity.startActivityForResult(getImageIntent(activity), requestCode)
         }
 
         class ImagePickerWithFragment(private val fragment: Fragment) : MediaPicker() {
-            override fun start(onComplete: (List<String>) -> Unit) =
-                fragment.startActivity(getImageIntent(fragment.context!!, onComplete))
+            override fun start(requestCode: Int) =
+                fragment.startActivityForResult(getImageIntent(fragment.context!!), requestCode)
         }
 
         fun createImage(activity: Activity) = ImagePickerWithActivity(activity)
 
         fun createImage(fragment: Fragment) = ImagePickerWithFragment(fragment)
+
+        fun getResult(intent: Intent?): List<String> =
+            intent?.getStringArrayListExtra("result")!!.toList()
     }
 
-    fun getImageIntent(context: Context, onComplete: (List<String>) -> Unit): Intent {
-        imageConfig.onComplete = OnComplete(onComplete)
+    fun getImageIntent(context: Context): Intent =
+        Intent(context, ImagePickActivity::class.java).apply {
+            putExtra(ImageConfig::class.java.simpleName, imageConfig)
+        }
 
-        val intent = Intent(context, ImagePickActivity::class.java)
-        intent.putExtra(ImageConfig::class.java.simpleName, imageConfig)
-        return intent
-    }
 
     fun single(): MediaPicker {
         imageConfig.maxImageCount = 1

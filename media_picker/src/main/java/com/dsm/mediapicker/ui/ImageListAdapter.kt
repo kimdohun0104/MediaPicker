@@ -38,6 +38,11 @@ class ImageListAdapter(
     inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind() {
             Glide.with(itemView.context).load(imageList[adapterPosition]).into(itemView.iv_image)
+            if (selectedPosition.contains(adapterPosition)) {
+                itemView.ll_check.visibility = View.VISIBLE
+            } else {
+                itemView.ll_check.visibility = View.INVISIBLE
+            }
             itemView.setOnClickListener {
                 if (selectedPosition.contains(adapterPosition)) {
                     selectedPosition.remove(adapterPosition)
@@ -69,8 +74,8 @@ class ImageListAdapter(
         notifyDataSetChanged()
     }
 
-    fun getSelectedPath(): List<String> =
-        arrayListOf<String>().apply { selectedPosition.forEach { add(getPathFromUri(imageList[it]) ?: "") } }.toList()
+    fun getSelectedPath(): ArrayList<String> =
+        arrayListOf<String>().apply { selectedPosition.forEach { add(getPathFromUri(imageList[it]) ?: "") } }
 
     private fun getPathFromUri(uri: Uri): String? {
 
