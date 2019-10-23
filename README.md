@@ -1,4 +1,3 @@
-# Sorry! It's not working now.. I will Fix as soon as possible
 # Media Picker!
 
 Hello! **Media Picker** an Android Library for pick image or video. 
@@ -21,7 +20,7 @@ It's very easy to apply to your project.
 allprojects {
 	repositories {
 		...
-        maven { url 'https://jitpack.io' }
+		maven { url 'https://jitpack.io' }
 	}
 }
 ```
@@ -30,12 +29,12 @@ allprojects {
 
 ```css
 dependencies {
-    implementation 'com.github.kimdohun0104:MediaPicker:1.0.2'
+    implementation 'com.github.kimdohun0104:MediaPicker:1.0.3'
 }
 ```
 
 <br>
-  
+
 ## Usage
 
  You can check how to pick images from media_picker_example for actual application
@@ -44,14 +43,29 @@ dependencies {
 
 ```kotlin
 MediaPicker.createImage(this)		// "this" can be activity or fragment
-	.start { selectedImages ->		// List<String>
-        selectedImages.foreach {
-            (Do Something...)
-        }
-    }
+	.start(REQUEST_CODE)
 ```
 
-You can start picker activity like this. MediaPicker is both Activity and Fragment are available. And you can get selected images in lambda function.
+You can start picker activity like this. MediaPicker is both Activity and Fragment are available. 
+
+<br>
+
+### Get Results
+
+```kotlin
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+	super.onActivityResult(requestCode, resultCode, data)
+	if (resultCode == Activity.RESULT_OK) {
+		if (requestCode == SELECT_IMAGE_CODE) {
+			Log.d("RESULT", MediaPicker.getResult(data).toString())
+		}
+	}
+}
+```
+
+ You can get results from **onActivityResult** with MediaPicker.getResult(). It will return list of actual path of the images.
+
+
 
 <br>
 
@@ -60,7 +74,7 @@ You can start picker activity like this. MediaPicker is both Activity and Fragme
 ```kotlin
 MediaPicker.createImage(this)
 	.single()
-	.start { ... }
+	.start(REQUEST_CODE)
 ```
 
   Single mode is useful to pick one image. It automatically prevents one or more select.
@@ -68,7 +82,7 @@ MediaPicker.createImage(this)
 ```kotlin
 MediaPicker.createImage(this)
 	.maxImageCount(10) 		// can select up to 10
-	.start { ... }
+	.start(REQUEST_CODE)
 ```
 
 <br>
@@ -84,7 +98,7 @@ MediaPicker.createImage(this)
 	.toolbarBackgroundColor(R.color.colorPrimary)
 	.toolbarTextColor(R.color.colorWhite)
 	.theme(R.style.AppTheme)
-	.start { ... }
+	.start(REQUEST_CODE)
 ```
 
 <br>
@@ -97,7 +111,7 @@ MediaPicker.createImage(this)
 MediaPicker.createImage(this)
 	.portraitSpan(3)
 	.landscapeSpan(5)
-	.start { ... }
+	.start(REQUEST_CODE)
 ```
 
 <br>
@@ -109,7 +123,7 @@ MediaPicker.createImage(this)
 ```
 MediaPicker.createImage(this)
 	.orientation(PickerOrientation.PORTRAIT)
-	.start { ... }
+	.start(REQUEST_CODE)
 ```
 
 <br>
@@ -129,10 +143,44 @@ MediaPicker.createImage(this)
 	.landscapeSpan(6)	// (default by 5)
 	.orientation(PickerOrientation.PORTAIT)	// (default by PickerOrientation.BOTH)
 	.theme(R.style.AppTheme)
-	.start { ... }
+	.start(REQUEST_CODE)
 ```
 
 <br>
+
+
+
+### Using Java
+
+```java
+findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
+
+	@Override
+	public void onClick(View v) {
+		MediaPicker.Companion
+            .createImage(JavaActivity.this)
+			.start(FRAGMENT_EXAMPLE_CODE);
+		}
+	});
+
+...
+
+@Override
+protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+	super.onActivityResult(requestCode, resultCode, data);
+	if (requestCode == FRAGMENT_EXAMPLE_CODE) {
+		if (resultCode == RESULT_OK) {
+			Log.d("FRAGMENT_RESULT", MediaPicker.Companion.getResult(data).toString());
+		}
+	}
+}
+```
+
+
+
+<br>
+
+
 
 ### License
 
@@ -159,4 +207,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
