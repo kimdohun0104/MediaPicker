@@ -2,14 +2,12 @@ package com.dsm.mediapicker.config
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.dsm.mediapicker.callback.OnComplete
 import com.dsm.mediapicker.enum.PickerOrientation
 
 class ImageConfig() : Parcelable {
 
     constructor(parcel: Parcel) : this() {
         maxImageCount = parcel.readInt()
-        onComplete = parcel.readSerializable() as OnComplete
         toolbarTitle = parcel.readString() ?: DefaultConfig.TOOLBAR_TITLE
         toolbarCompleteText = parcel.readString() ?: DefaultConfig.TOOLBAR_COMPLETE_TEXT
         toolbarBackgroundColor = parcel.readInt()
@@ -28,7 +26,6 @@ class ImageConfig() : Parcelable {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(maxImageCount)
-        parcel.writeSerializable(onComplete)
         parcel.writeString(toolbarTitle)
         parcel.writeString(toolbarCompleteText)
         parcel.writeInt(toolbarBackgroundColor)
@@ -42,8 +39,6 @@ class ImageConfig() : Parcelable {
     override fun describeContents(): Int = 0
 
     var maxImageCount: Int = DefaultConfig.MAX_IMAGE_COUNT
-
-    var onComplete: OnComplete? = null
 
     var toolbarTitle: String = DefaultConfig.TOOLBAR_TITLE
     var toolbarCompleteText: String = DefaultConfig.TOOLBAR_COMPLETE_TEXT

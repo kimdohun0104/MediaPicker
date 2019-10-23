@@ -2,6 +2,7 @@ package com.dsm.mediapicker.ui
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -93,10 +94,9 @@ class ImagePickActivity : AppCompatActivity() {
         }
 
         tv_complete.setOnClickListener {
-            config.onComplete?.let { onSelected ->
-                onSelected.onComplete(adapter.getSelectedPath())
-                finish()
-            }
+            val result = Intent().apply { putStringArrayListExtra("result", adapter.getSelectedPath()) }
+            setResult(RESULT_OK, result)
+            finish()
         }
     }
 
