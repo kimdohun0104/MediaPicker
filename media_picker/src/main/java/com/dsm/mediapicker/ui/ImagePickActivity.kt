@@ -7,7 +7,6 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -118,14 +117,12 @@ class ImagePickActivity : AppCompatActivity() {
 
     private fun getAllShownImagesPath(activity: Activity): List<Uri> {
         val uriExternal: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val cursor: Cursor?
-        val columnIndexID: Int
         val listOfAllImages = arrayListOf<Uri>()
-        val projection = arrayOf(MediaStore.Images.Media._ID)
-        var imageId: Long
-        cursor = activity.contentResolver.query(uriExternal, projection, null, null, null)
-        if (cursor != null) {
-            columnIndexID = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+        val projection = arrayOf(MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.Media._ID)
+        val cursor = activity.contentResolver.query(uriExternal, projection, null, null, MediaStore.Images.ImageColumns.DATE_ADDED + " ASC")
+        cursor?.let {
+            val columnIndexID = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            var imageId: Long
             while (cursor.moveToNext()) {
                 imageId = cursor.getLong(columnIndexID)
                 val uriImage = Uri.withAppendedPath(uriExternal, "" + imageId)

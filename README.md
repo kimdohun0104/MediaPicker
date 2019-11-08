@@ -10,7 +10,17 @@ It's very easy to apply to your project.
 
 <img src="https://user-images.githubusercontent.com/36754680/66700279-c3724a00-ed29-11e9-8604-d2c479ef5f68.png" style="zoom:75%;" />
 
+<br>
 
+### Api Level
+```css
+defaultConfig {
+    minSdkVersion 19
+    targetSdkVersion 29
+}
+```
+
+<br>
 
 ### Download
 
