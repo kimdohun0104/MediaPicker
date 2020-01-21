@@ -31,13 +31,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:maxLines="1"
                 app:layout_constraintRight_toLeftOf="@id/ll_count"
-                android:layout_marginEnd="14dp"/>
+                android:layout_marginEnd="14dp"
+                android:layout_marginRight="14dp"/>
 
             <TextView
                 android:id="@+id/tv_complete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
@@ -56,13 +58,15 @@
                 app:layout_constraintRight_toLeftOf="@id/tv_complete"
                 app:layout_constraintTop_toTopOf="@id/tv_complete"
                 app:layout_constraintBottom_toBottomOf="@id/tv_complete"
-                android:layout_marginEnd="10dp">
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp">
                 <TextView
                     android:id="@+id/tv_current"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:layout_marginEnd="2dp"/>
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginRight="2dp"/>
 
                 <TextView
                     android:id="@+id/tv_slash"
@@ -70,7 +74,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/slash"
                     android:textSize="16sp"
-                    android:layout_marginEnd="2dp" />
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginRight="2dp"/>
 
                 <TextView
                     android:id="@+id/tv_max"

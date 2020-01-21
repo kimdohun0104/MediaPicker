@@ -1,6 +1,5 @@
 package com.dsm.mediapicker.ui
 
-import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
@@ -14,16 +13,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dsm.mediapicker.R
-import com.dsm.mediapicker.callback.OnImageSelected
 import kotlinx.android.synthetic.main.item_image.view.*
 
 class ImageListAdapter(
     private val context: Context,
     private val maxCount: Int,
-    private val onImageSelected: OnImageSelected
+    private val onImageSelected: (count: Int) -> Unit
 ) : RecyclerView.Adapter<ImageListAdapter.ImageViewHolder>() {
 
-    private val imageList = arrayListOf<Uri>()
+    var imageList = listOf<Uri>()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     private val selectedPosition = arrayListOf<Int>()
 
     private var originalSelectedView: View? = null
@@ -47,7 +50,7 @@ class ImageListAdapter(
                 if (selectedPosition.contains(adapterPosition)) {
                     selectedPosition.remove(adapterPosition)
                     itemView.ll_check.visibility = View.GONE
-                    onImageSelected.onSelected(selectedPosition.size)
+                    onImageSelected(selectedPosition.size)
                 } else {
                     // single mode
                     if (maxCount == 1) {
@@ -56,37 +59,26 @@ class ImageListAdapter(
                         selectedPosition.clear()
                         selectedPosition.add(adapterPosition)
                         itemView.ll_check.visibility = View.VISIBLE
-                        onImageSelected.onSelected(selectedPosition.size)
+                        onImageSelected(selectedPosition.size)
                     } else {
                         if (selectedPosition.size == maxCount)
                             return@setOnClickListener
                         selectedPosition.add(adapterPosition)
                         itemView.ll_check.visibility = View.VISIBLE
-                        onImageSelected.onSelected(selectedPosition.size)
+                        onImageSelected(selectedPosition.size)
                     }
                 }
             }
         }
     }
 
-    fun addItems(items: List<Uri>) {
-        items.forEach { imageList.add(it) }
-        notifyDataSetChanged()
-    }
-
     fun getSelectedPath(): ArrayList<String> =
-        arrayListOf<String>().apply { selectedPosition.forEach { add(getPathFromUri(imageList[it]) ?: "") } }
+        selectedPosition.map { getPathFromUri(imageList[it]) ?: "" } as ArrayList<String>
 
     private fun getPathFromUri(uri: Uri): String? {
-
-        val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-
-        // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
             when {
                 isDownloadsDocument(uri) -> {
-
                     val id = DocumentsContract.getDocumentId(uri)
                     val contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)
@@ -97,38 +89,24 @@ class ImageListAdapter(
                 isMediaDocument(uri) -> {
                     val docId = DocumentsContract.getDocumentId(uri)
                     val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                    val type = split[0]
-
-                    var contentUri: Uri? = null
-                    when (type) {
-                        "image" -> contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                        "video" -> contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                        "audio" -> contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                    }
+                    val contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
                     val selection = "_id=?"
                     val selectionArgs = arrayOf(split[1])
 
                     return getDataColumn(context, contentUri, selection, selectionArgs)
-                }// MediaProvider
-                // DownloadsProvider
-            }// MediaProvider
-            // DownloadsProvider
+                }
+            }
         } else if ("content".equals(uri.scheme!!, ignoreCase = true)) {
-
-            // Return the remote address
             return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(context, uri, null, null)
-
         } else if ("file".equals(uri.scheme!!, ignoreCase = true)) {
             return uri.path
-        }// File
-        // MediaStore (and general)
+        }
 
         return null
     }
 
-    @SuppressLint("Recycle")
-    fun getDataColumn(
+    private fun getDataColumn(
         context: Context, uri: Uri?, selection: String?,
         selectionArgs: Array<String>?
     ): String? {
@@ -149,15 +127,9 @@ class ImageListAdapter(
         return null
     }
 
-    private fun isDownloadsDocument(uri: Uri): Boolean {
-        return "com.android.providers.downloads.documents" == uri.authority
-    }
+    private fun isDownloadsDocument(uri: Uri): Boolean = "com.android.providers.downloads.documents" == uri.authority
 
-    private fun isMediaDocument(uri: Uri): Boolean {
-        return "com.android.providers.media.documents" == uri.authority
-    }
+    private fun isMediaDocument(uri: Uri): Boolean = "com.android.providers.media.documents" == uri.authority
 
-    private fun isGooglePhotosUri(uri: Uri): Boolean {
-        return "com.google.android.apps.photos.content" == uri.authority
-    }
+    private fun isGooglePhotosUri(uri: Uri): Boolean = "com.google.android.apps.photos.content" == uri.authority
 }
