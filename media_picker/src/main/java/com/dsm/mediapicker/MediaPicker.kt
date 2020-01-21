@@ -100,7 +100,7 @@ abstract class MediaPicker {
         return this
     }
 
-    fun onResult(onResult: (List<String>) -> Unit): MediaPicker {
+    fun onResult(onResult: (List<String>) -> Any): MediaPicker {
         imageConfig.onResult = OnResult(onResult)
         return this
     }
