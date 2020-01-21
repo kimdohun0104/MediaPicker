@@ -78,34 +78,51 @@ class ImageListAdapter(
         selectedPosition.map { getPathFromUri(imageList[it]) ?: "" } as ArrayList<String>
 
     private fun getPathFromUri(uri: Uri): String? {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
-            return when {
+
+        val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            when {
                 isDownloadsDocument(uri) -> {
+
                     val id = DocumentsContract.getDocumentId(uri)
                     val contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), id.toLong()
+                        Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)
                     )
 
-                    getDataColumn(context, contentUri, null, null)
+                    return getDataColumn(context, contentUri, null, null)
                 }
                 isMediaDocument(uri) -> {
                     val docId = DocumentsContract.getDocumentId(uri)
                     val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    val type = split[0]
 
-                    val contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    var contentUri: Uri? = null
+                    when (type) {
+                        "image" -> contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                        "video" -> contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                        "audio" -> contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    }
 
                     val selection = "_id=?"
                     val selectionArgs = arrayOf(split[1])
 
-                    getDataColumn(context, contentUri, selection, selectionArgs)
-                }
-                else -> null
-            }
+                    return getDataColumn(context, contentUri, selection, selectionArgs)
+                }// MediaProvider
+                // DownloadsProvider
+            }// MediaProvider
+            // DownloadsProvider
         } else if ("content".equals(uri.scheme!!, ignoreCase = true)) {
-            if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(context, uri, null, null)
+
+            // Return the remote address
+            return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(context, uri, null, null)
+
         } else if ("file".equals(uri.scheme!!, ignoreCase = true)) {
-            uri.path
-        }
+            return uri.path
+        }// File
+        // MediaStore (and general)
 
         return null
     }
