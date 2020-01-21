@@ -1,6 +1,7 @@
 package com.dsm.mediapicker.config
 
 import android.os.Parcelable
+import com.dsm.mediapicker.callback.OnResult
 import com.dsm.mediapicker.enum.PickerOrientation
 import kotlinx.android.parcel.Parcelize
 
@@ -17,5 +18,7 @@ data class ImageConfig(
     var landscapeSpan: Int = DefaultConfig.LANDSCAPE_SPAN,
 
     var orientation: PickerOrientation = DefaultConfig.ORIENTATION,
-    var theme: Int = DefaultConfig.THEME
+    var theme: Int = DefaultConfig.THEME,
+
+    var onResult: OnResult? = null
 ) : Parcelable

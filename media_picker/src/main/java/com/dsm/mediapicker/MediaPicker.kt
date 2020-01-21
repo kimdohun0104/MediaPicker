@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.annotation.ColorRes
 import androidx.annotation.StyleRes
 import androidx.fragment.app.Fragment
+import com.dsm.mediapicker.callback.OnResult
 import com.dsm.mediapicker.config.DefaultConfig
 import com.dsm.mediapicker.config.ImageConfig
 import com.dsm.mediapicker.enum.PickerOrientation
@@ -17,15 +18,21 @@ abstract class MediaPicker {
 
     abstract fun start(requestCode: Int)
 
+    abstract fun start()
+
     companion object {
         class ImagePickerWithActivity(private val activity: Activity) : MediaPicker() {
             override fun start(requestCode: Int) =
                 activity.startActivityForResult(getImageIntent(activity), requestCode)
+
+            override fun start() = activity.startActivity(getImageIntent(activity))
         }
 
         class ImagePickerWithFragment(private val fragment: Fragment) : MediaPicker() {
             override fun start(requestCode: Int) =
-                fragment.startActivityForResult(getImageIntent(fragment.context!!), requestCode)
+                fragment.startActivityForResult(getImageIntent(fragment.requireContext()), requestCode)
+
+            override fun start() = fragment.startActivity(getImageIntent(fragment.requireContext()))
         }
 
         fun createImage(activity: Activity) = ImagePickerWithActivity(activity)
@@ -40,7 +47,6 @@ abstract class MediaPicker {
         Intent(context, ImagePickActivity::class.java).apply {
             putExtra(ImageConfig::class.java.simpleName, imageConfig)
         }
-
 
     fun single(): MediaPicker {
         imageConfig.maxImageCount = 1
@@ -91,6 +97,11 @@ abstract class MediaPicker {
 
     fun theme(@StyleRes theme: Int): MediaPicker {
         imageConfig.theme = theme
+        return this
+    }
+
+    fun onResult(onResult: (List<String>) -> Unit): MediaPicker {
+        imageConfig.onResult = OnResult(onResult)
         return this
     }
 }

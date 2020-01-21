@@ -75,7 +75,17 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 
  You can get results from **onActivityResult** with MediaPicker.getResult(). It will return list of actual path of the images.
 
+<br>
 
+### Get Result with Callback
+ It is very useful when onActivityResult is difficult to use.   
+ **warning** But this does not support for JAVA.
+ 
+ ```kotlin
+MediaPicker.createImage(this)
+   .onResult { Log.d("CALLBACK_RESULT", it.toString()) }
+   .start()
+ ```
 
 <br>
 

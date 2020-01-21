@@ -98,8 +98,12 @@ class ImagePickActivity : AppCompatActivity() {
         }
 
         tv_complete.setOnClickListener {
-            val result = Intent().apply { putStringArrayListExtra("result", adapter.getSelectedPath()) }
-            setResult(RESULT_OK, result)
+            val selectedList = adapter.getSelectedPath()
+
+            config.onResult?.result?.invoke(selectedList)
+
+            val resultIntent = Intent().apply { putStringArrayListExtra("result", selectedList) }
+            setResult(RESULT_OK, resultIntent)
             finish()
         }
     }
