@@ -15,7 +15,7 @@ It's very easy to apply to your project.
 ### Api Level
 ```css
 defaultConfig {
-    minSdkVersion 19
+    minSdkVersion 15
     targetSdkVersion 29
 }
 ```
@@ -39,7 +39,7 @@ allprojects {
 
 ```css
 dependencies {
-    implementation 'com.github.kimdohun0104:MediaPicker:1.0.3'
+    implementation 'com.github.kimdohun0104:MediaPicker:1.0.4'
 }
 ```
 
