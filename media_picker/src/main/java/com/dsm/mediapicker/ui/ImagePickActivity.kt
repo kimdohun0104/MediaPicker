@@ -11,7 +11,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +19,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dsm.mediapicker.R
-import com.dsm.mediapicker.callback.OnImageSelected
 import com.dsm.mediapicker.config.DefaultConfig
 import com.dsm.mediapicker.config.ImageConfig
 import com.dsm.mediapicker.enum.PickerOrientation
@@ -34,11 +32,7 @@ class ImagePickActivity : AppCompatActivity() {
 
     private val config: ImageConfig by lazy { intent.extras?.getParcelable(ImageConfig::class.java.simpleName) ?: ImageConfig() }
     private val adapter: ImageListAdapter by lazy {
-        ImageListAdapter(this, config.maxImageCount, object : OnImageSelected {
-            override fun onSelected(count: Int) {
-                tv_current.text = count.toString()
-            }
-        })
+        ImageListAdapter(this, config.maxImageCount) { tv_current.text = it.toString() }
     }
 
     override fun getTheme(): Resources.Theme {
