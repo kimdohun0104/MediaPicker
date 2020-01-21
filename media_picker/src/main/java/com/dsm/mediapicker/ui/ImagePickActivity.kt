@@ -8,8 +8,10 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +28,10 @@ import kotlinx.android.synthetic.main.activity_image_pick.*
 
 class ImagePickActivity : AppCompatActivity() {
 
+    companion object {
+        private const val READ_EXTERNAL_STORAGE_CODE = 5254
+    }
+
     private val config: ImageConfig by lazy { intent.extras?.getParcelable(ImageConfig::class.java.simpleName) ?: ImageConfig() }
     private val adapter: ImageListAdapter by lazy {
         ImageListAdapter(this, config.maxImageCount, object : OnImageSelected {
@@ -41,14 +47,10 @@ class ImagePickActivity : AppCompatActivity() {
         return theme
     }
 
-    companion object {
-        private const val READ_EXTERNAL_STORAGE_CODE = 5254
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_pick)
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), READ_EXTERNAL_STORAGE_CODE)
+        requestPermission()
 
         if (config.orientation == PickerOrientation.PORTRAIT)
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -65,12 +67,21 @@ class ImagePickActivity : AppCompatActivity() {
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED)
                     Toast.makeText(this, R.string.require_permission_to_pick, Toast.LENGTH_SHORT).show()
                 else
-                    adapter.addItems(getAllShownImagesPath(this))
+                    adapter.imageList = getAllShownImagesPath(this)
             }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
-
     }
+
+    private fun requestPermission() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), READ_EXTERNAL_STORAGE_CODE)
+        else Unit // Can not ask runtime permission below 6.0
+
+    private fun isReadExternalStorageAllow(): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_DENIED
+        else true
 
     private fun viewInit() {
         tv_title.text = config.toolbarTitle
@@ -111,28 +122,24 @@ class ImagePickActivity : AppCompatActivity() {
         rv_image.adapter = adapter
         rv_image.layoutManager = layoutManager
 
-        if (isReadExternalStorageAllow())
-            adapter.addItems(getAllShownImagesPath(this).reversed())
+        isReadExternalStorageAllow()
     }
 
     private fun getAllShownImagesPath(activity: Activity): List<Uri> {
         val uriExternal: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val listOfAllImages = arrayListOf<Uri>()
-        val projection = arrayOf(MediaStore.Images.Media.DATE_ADDED, MediaStore.Images.Media._ID)
-        val cursor = activity.contentResolver.query(uriExternal, projection, null, null, MediaStore.Images.ImageColumns.DATE_ADDED + " ASC")
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        val cursor = activity.contentResolver.query(uriExternal, projection, null, null, MediaStore.Images.ImageColumns.DATE_ADDED + " DESC")
         cursor?.let {
             val columnIndexID = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             var imageId: Long
             while (cursor.moveToNext()) {
                 imageId = cursor.getLong(columnIndexID)
-                val uriImage = Uri.withAppendedPath(uriExternal, "" + imageId)
+                val uriImage = Uri.withAppendedPath(uriExternal, imageId.toString())
                 listOfAllImages.add(uriImage)
             }
             cursor.close()
         }
         return listOfAllImages
     }
-
-    private fun isReadExternalStorageAllow(): Boolean =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_DENIED
 }

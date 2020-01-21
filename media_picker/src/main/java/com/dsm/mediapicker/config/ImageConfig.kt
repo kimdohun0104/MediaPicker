@@ -1,53 +1,21 @@
 package com.dsm.mediapicker.config
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.dsm.mediapicker.enum.PickerOrientation
+import kotlinx.android.parcel.Parcelize
 
-class ImageConfig() : Parcelable {
+@Parcelize
+data class ImageConfig(
+    var maxImageCount: Int = DefaultConfig.MAX_IMAGE_COUNT,
 
-    constructor(parcel: Parcel) : this() {
-        maxImageCount = parcel.readInt()
-        toolbarTitle = parcel.readString() ?: DefaultConfig.TOOLBAR_TITLE
-        toolbarCompleteText = parcel.readString() ?: DefaultConfig.TOOLBAR_COMPLETE_TEXT
-        toolbarBackgroundColor = parcel.readInt()
-        toolbarTextColor = parcel.readInt()
-        portraitSpan = parcel.readInt()
-        landscapeSpan = parcel.readInt()
-        orientation = parcel.readSerializable() as PickerOrientation
-        theme = parcel.readInt()
-    }
+    var toolbarTitle: String = DefaultConfig.TOOLBAR_TITLE,
+    var toolbarCompleteText: String = DefaultConfig.TOOLBAR_COMPLETE_TEXT,
+    var toolbarBackgroundColor: Int = DefaultConfig.TOOLBAR_BACKGROUND_COLOR,
+    var toolbarTextColor: Int = DefaultConfig.TOOLBAR_TEXT_COLOR,
 
-    companion object CREATOR : Parcelable.Creator<ImageConfig> {
-        override fun createFromParcel(parcel: Parcel): ImageConfig = ImageConfig(parcel)
+    var portraitSpan: Int = DefaultConfig.PORTRAIT_SPAN,
+    var landscapeSpan: Int = DefaultConfig.LANDSCAPE_SPAN,
 
-        override fun newArray(size: Int): Array<ImageConfig?> = arrayOfNulls(size)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(maxImageCount)
-        parcel.writeString(toolbarTitle)
-        parcel.writeString(toolbarCompleteText)
-        parcel.writeInt(toolbarBackgroundColor)
-        parcel.writeInt(toolbarTextColor)
-        parcel.writeInt(portraitSpan)
-        parcel.writeInt(landscapeSpan)
-        parcel.writeSerializable(orientation)
-        parcel.writeInt(theme)
-    }
-
-    override fun describeContents(): Int = 0
-
-    var maxImageCount: Int = DefaultConfig.MAX_IMAGE_COUNT
-
-    var toolbarTitle: String = DefaultConfig.TOOLBAR_TITLE
-    var toolbarCompleteText: String = DefaultConfig.TOOLBAR_COMPLETE_TEXT
-    var toolbarBackgroundColor: Int = DefaultConfig.TOOLBAR_BACKGROUND_COLOR
-    var toolbarTextColor: Int = DefaultConfig.TOOLBAR_TEXT_COLOR
-
-    var portraitSpan: Int = DefaultConfig.PORTRAIT_SPAN
-    var landscapeSpan: Int = DefaultConfig.LANDSCAPE_SPAN
-
-    var orientation: PickerOrientation = DefaultConfig.ORIENTATION
+    var orientation: PickerOrientation = DefaultConfig.ORIENTATION,
     var theme: Int = DefaultConfig.THEME
-}
+) : Parcelable
