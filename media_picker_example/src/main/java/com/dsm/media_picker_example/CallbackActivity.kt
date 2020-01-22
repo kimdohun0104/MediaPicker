@@ -16,7 +16,6 @@ class CallbackActivity : AppCompatActivity() {
             MediaPicker.createImage(this)
                 .onResult {
                     Log.d("CALLBACK_RESULT", it.toString())
-                    ""
                 }
                 .start()
         }
