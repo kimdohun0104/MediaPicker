@@ -30,7 +30,7 @@ class ImagePickActivity : AppCompatActivity() {
         private const val READ_EXTERNAL_STORAGE_CODE = 5254
     }
 
-    private val config: ImageConfig by lazy { intent.extras?.getSerializable(ImageConfig::class.java.simpleName) as? ImageConfig ?: ImageConfig() }
+    private val config: ImageConfig by lazy { intent.extras?.getParcelable(ImageConfig::class.java.simpleName) ?: ImageConfig() }
     private val adapter: ImageListAdapter by lazy {
         ImageListAdapter(this, config.maxImageCount) { tv_current.text = it.toString() }
     }
@@ -99,6 +99,8 @@ class ImagePickActivity : AppCompatActivity() {
 
         tv_complete.setOnClickListener {
             val selectedList = adapter.getSelectedPath()
+
+            if (selectedList.size <= 0) return@setOnClickListener
 
             config.onResult?.result?.invoke(selectedList)
 

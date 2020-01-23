@@ -1,9 +1,11 @@
 package com.dsm.mediapicker.config
 
+import android.os.Parcelable
 import com.dsm.mediapicker.callback.OnResult
 import com.dsm.mediapicker.enum.PickerOrientation
-import java.io.Serializable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class ImageConfig(
     var maxImageCount: Int = DefaultConfig.MAX_IMAGE_COUNT,
 
@@ -19,4 +21,4 @@ data class ImageConfig(
     var theme: Int = DefaultConfig.THEME,
 
     var onResult: OnResult? = null
-) : Serializable
+) : Parcelable
