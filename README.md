@@ -15,7 +15,7 @@ It's very easy to apply to your project.
 ### Api Level
 ```css
 defaultConfig {
-    minSdkVersion 19
+    minSdkVersion 15
     targetSdkVersion 29
 }
 ```
