@@ -39,7 +39,7 @@ allprojects {
 
 ```css
 dependencies {
-    implementation 'com.github.kimdohun0104:MediaPicker:1.0.5'
+    implementation 'com.github.kimdohun0104:MediaPicker:1.0.54'
 }
 ```
 
@@ -78,8 +78,9 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 <br>
 
 ### Get Result with Callback
- It is very useful when onActivityResult is difficult to use.   
- **warning** But this does not support for JAVA.
+ It is very simple way to get results.  
+ **warning** But this does not support for JAVA.  
+ **warning** This way is currently very unstable. In some case, it would not be work.  
  
  ```kotlin
 MediaPicker.createImage(this)
