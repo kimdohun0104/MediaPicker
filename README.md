@@ -1,6 +1,6 @@
 # Media Picker!
 
-Hello! **Media Picker** an Android Library for pick image or video. 
+Hello! **Media Picker** an Android Library for pick image.
 
 It's very easy to apply to your project.
 
@@ -15,7 +15,7 @@ It's very easy to apply to your project.
 ### Api Level
 ```css
 defaultConfig {
-    minSdkVersion 15
+    minSdkVersion 14
     targetSdkVersion 29
 }
 ```
@@ -39,7 +39,7 @@ allprojects {
 
 ```css
 dependencies {
-    implementation 'com.github.kimdohun0104:MediaPicker:1.0.54'
+    implementation 'com.github.kimdohun0104:MediaPicker:1.1.0'
 }
 ```
 
@@ -52,7 +52,7 @@ dependencies {
 ### Simple Start
 
 ```kotlin
-MediaPicker.createImage(this)		// "this" can be activity or fragment
+MediaPicker.createImage(this)		
 	.start(REQUEST_CODE)
 ```
 
@@ -78,14 +78,10 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 <br>
 
 ### Get Result with Callback
- It is very simple way to get results.  
- **warning** But this does not support for JAVA.  
- **warning** This way is currently very unstable. In some case, it would not be work.  
- 
+ It is very simple way to get results.
  ```kotlin
 MediaPicker.createImage(this)
-   .onResult { Log.d("CALLBACK_RESULT", it.toString()) }
-   .start()
+   .start { Log.d("DEBUGLOG", it.toString()) }
  ```
 
 <br>
@@ -164,39 +160,11 @@ MediaPicker.createImage(this)
 	.landscapeSpan(6)	// (default by 5)
 	.orientation(PickerOrientation.PORTAIT)	// (default by PickerOrientation.BOTH)
 	.theme(R.style.AppTheme)
+	.permissionRequireText(R.string.permission_require)
 	.start(REQUEST_CODE)
 ```
 
 <br>
-
-
-
-### Using Java
-
-```java
-findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
-
-	@Override
-	public void onClick(View v) {
-		MediaPicker.Companion
-            .createImage(JavaActivity.this)
-			.start(FRAGMENT_EXAMPLE_CODE);
-		}
-	});
-
-...
-
-@Override
-protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-	super.onActivityResult(requestCode, resultCode, data);
-	if (requestCode == FRAGMENT_EXAMPLE_CODE) {
-		if (resultCode == RESULT_OK) {
-			Log.d("FRAGMENT_RESULT", MediaPicker.Companion.getResult(data).toString());
-		}
-	}
-}
-```
-
 
 
 <br>

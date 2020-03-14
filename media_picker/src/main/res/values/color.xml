@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPickerBlue">#1e88e5</color>
-    <color name="colorPickerWhite">#ffffff</color>
+    <color name="colorMediaPickerBlue">#1e88e5</color>
+    <color name="colorMediaPickerWhite">#ffffff</color>
 </resources>

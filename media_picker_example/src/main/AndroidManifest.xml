@@ -10,17 +10,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CallbackActivity" >
+        <activity android:name=".JavaResultActivity"></activity>
+        <activity android:name=".KotlinResultActivity" />
+        <activity android:name=".KotlinCallbackActivity" />
+        <activity android:name=".JavaCallbackActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
-        <activity android:name=".JavaActivity" />
-        <activity android:name=".MainActivity">
         </activity>
     </application>
 

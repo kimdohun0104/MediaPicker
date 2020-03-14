@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="PickerTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MediaPickerDefaultTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#1e88e5</item>
         <item name="colorPrimaryDark">#005cb2</item>
         <item name="colorAccent">#ffffff</item>

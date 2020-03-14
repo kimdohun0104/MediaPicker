@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ExampleApp</string>
     <string name="start_for_pick">Start Pick Image</string>
+
+    <string name="permission">permission</string>
+    <string name="toolbar_title">Toolbar title</string>
 </resources>

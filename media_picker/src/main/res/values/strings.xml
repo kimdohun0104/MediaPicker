@@ -1,5 +1,3 @@
 <resources>
-    <string name="slash">/</string>
-
-    <string name="require_permission_to_pick">You need permission to do this</string>
+    <string name="media_picker_slash">/</string>
 </resources>
